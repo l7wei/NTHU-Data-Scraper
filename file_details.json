@@ -1,409 +1,429 @@
 {
-  "last_updated": "2025-02-15T01:07:21.127959+08:00",
+  "last_updated": "2025-02-15T01:20:55.837539+08:00",
   "file_details": {
     "directories.json": [
       {
         "name": "directories.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       }
     ],
     "dining.json": [
       {
         "name": "dining.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       }
     ],
     "buses.json": [
       {
         "name": "buses.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       }
     ],
     "maps.json": [
       {
         "name": "maps.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       }
     ],
     "newsletters.json": [
       {
         "name": "newsletters.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       }
     ],
     "newsletters_list.json": [
       {
         "name": "newsletters_list.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       }
     ],
     "buses": [
       {
         "name": "weekdayBusScheduleTowardMainCampus.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "weekdayBusScheduleTowardTSMCBuilding.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "weekendBusScheduleTowardMainGate.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "weekendBusScheduleTowardMainCampus.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "towardMainCampusInfo.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "weekdayBusScheduleTowardMainGate.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "weekdayBusScheduleTowardSouthCampus.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "towardSouthCampusInfo.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "towardTSMCBuildingInfo.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "weekendBusScheduleTowardTSMCBuilding.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "towardMainGateInfo.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "weekendBusScheduleTowardSouthCampus.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
+      },
+      {
+        "name": "nanda_1.jpg",
+        "last_updated": "2025-02-15T01:20:54+08:00",
+        "last_commit": "676e285d82a33f4ea7b8f9568839742ef1e54f63"
+      },
+      {
+        "name": "main_0.jpg",
+        "last_updated": "2025-02-15T01:20:54+08:00",
+        "last_commit": "676e285d82a33f4ea7b8f9568839742ef1e54f63"
+      },
+      {
+        "name": "nanda_0.jpg",
+        "last_updated": "2025-02-15T01:20:54+08:00",
+        "last_commit": "676e285d82a33f4ea7b8f9568839742ef1e54f63"
+      },
+      {
+        "name": "main_1.jpg",
+        "last_updated": "2025-02-15T01:20:54+08:00",
+        "last_commit": "676e285d82a33f4ea7b8f9568839742ef1e54f63"
       }
     ],
     "maps": [
       {
         "name": "NandaEN.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "MainEN.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "MainZH.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "NandaZH.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       }
     ],
     "courses": [
       {
         "name": "10820.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "lastest.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "11120-11220.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "10910-11110.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "10820.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "11010.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "10910.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "11320.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "11220.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "11120.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "11110.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "11210.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "10920.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "11020.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       }
     ],
     "newsletters": [
       {
         "name": "清華大學化工系友電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "新聞剪輯電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "電機工程學系電子報(學生).json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "主計室電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "學生事務報-學生.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "國立清華大學校長遴選委員會.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "科管院職涯電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "藝術文化總中心電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "清華校友總會會務訊息.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "台灣語言學通訊.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "教學發展中心電子報-教師.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "eecs-students.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "清華大學化學系電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "心諮系雙週例講座.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "語文中心電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "秘書處-全校教職員.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "愛慾電子報報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "築思脈動(Pulse of Education).json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "清華大學工工系電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "住宿書院電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "諮商中心-心窩報報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "研發處電子報-教職.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "計中-教育訓練.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "教務處綜合教務組電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "NTHU-Newsletter.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "國立清華大學圖書館-學生.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "國立清華大學核工暨工科系友會電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "數學系電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "清華校友電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "NTHU-Division of Health Service.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "人事室電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "清華大學科管院電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "課務電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "人社院學士班電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "英語教學精進中心-研究生電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "清華簡訊.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "校長同意權人投票事務委員會.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "國立清華大學學生會電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "國立清華大學動機系系友電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "人文社會學院電子報.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       },
       {
         "name": "域報 Field Cast.json",
-        "last_updated": "2025-02-15T00:22:55+08:00",
-        "last_commit": "51707c1b26a7be62df6d51e287515f61fedd50ce"
+        "last_updated": "2025-02-15T01:20:05+08:00",
+        "last_commit": "699765020a9aa6525d7090a783b2f62396e09fdd"
       }
     ]
   }

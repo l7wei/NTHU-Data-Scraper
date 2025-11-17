@@ -143,6 +143,11 @@ class DirectorySpider(scrapy.Spider):
         "AUTOTHROTTLE_ENABLED": True,
     }
 
+    def __init__(self, crawl_type="incremental", *args, **kwargs):
+        """Initialize spider. crawl_type is ignored for this spider."""
+        super().__init__(*args, **kwargs)
+        self.crawl_type = crawl_type
+
     def parse(self, response):
         """
         解析首頁，抓取所有系所的 URL。

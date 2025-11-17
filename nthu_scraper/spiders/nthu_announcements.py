@@ -6,9 +6,12 @@ from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 import scrapy
 
+from nthu_scraper.announcement_url_manager import AnnouncementURLManager
+
 # --- 全域參數設定 ---
 DATA_FOLDER = Path(os.getenv("DATA_FOLDER", "temp"))
 COMBINED_JSON_FILE = DATA_FOLDER / "announcements.json"
+URL_LIST_FILE = DATA_FOLDER / "announcement_urls.json"
 
 DIRECTORY_PATH = Path("data/directory.json")  # 單位資料 JSON 檔案的路徑
 
@@ -23,6 +26,10 @@ other_data = {
     },
     "國立清華大學學生會": {
         "zh-tw": "https://nthusa.site.nthu.edu.tw/?Lang=zh-tw",
+    },
+    "校園公車暨巡迴公車公告": {
+        "zh-tw": "https://affairs.site.nthu.edu.tw/p/403-1165-1065-1.php?Lang=zh-tw",
+        "en": "https://affairs.site.nthu.edu.tw/p/403-1165-1065-1.php?Lang=en",
     },
 }
 
@@ -157,32 +164,69 @@ class AnnouncementsSpider(scrapy.Spider):
         "ITEM_PIPELINES": {"nthu_scraper.spiders.nthu_announcements.JsonPipeline": 1},
     }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, crawl_type="incremental", *args, **kwargs):
         """
         初始化 Spider，載入單位網址。
+        
+        Args:
+            crawl_type: "incremental" for fast incremental crawl from known URLs,
+                       "full" for complete crawl from directory
         """
         super().__init__(*args, **kwargs)
+        self.crawl_type = crawl_type
         self.rpage_urls = {}
+        self.url_manager = AnnouncementURLManager(URL_LIST_FILE)
+        self.discovered_urls = set()  # Track URLs discovered in this crawl
+        
         # 從檔案載入
         self.rpage_urls = load_rpage_urls_from_directory(DIRECTORY_PATH, other_data)
+        
+        self.logger.info(f"Crawl type: {self.crawl_type}")
+        stats = self.url_manager.get_statistics()
+        self.logger.info(f"URL Manager Stats: {stats}")
 
     def start_requests(self):
         """
         Spider 的起始請求方法。
 
-        為每個單位和語言版本建立 Scrapy Request，並指定 parse 方法作為回呼函數。
+        根據 crawl_type 決定爬取策略:
+        - incremental: 只爬取已知的公告列表 URLs
+        - full: 完整爬取所有單位頁面並更新 URL 列表
         """
-        for dept, lang_urls in self.rpage_urls.items():
-            for lang, url in lang_urls.items():
+        if self.crawl_type == "incremental":
+            # Incremental crawl: only crawl known announcement URLs
+            urls_to_crawl = self.url_manager.get_urls_to_crawl()
+            self.logger.info(f"Incremental crawl: Processing {len(urls_to_crawl)} known URLs")
+            
+            for url in urls_to_crawl:
+                # Try to determine language from URL
+                lang = "zh-tw" if "zh-tw" in url else "en" if "en" in url else "zh-tw"
                 yield scrapy.Request(
                     url,
-                    callback=self.parse,
+                    callback=self.parse_announcement_list,
                     meta={
-                        "department_name": dept,
+                        "department_name": "Unknown",  # Will be in metadata if available
                         "language": lang,
-                        "original_url": url,
+                        "announcement_url": url,
+                        "is_incremental": True,
                     },
+                    errback=self.handle_error,
                 )
+        else:
+            # Full crawl: discover all announcement pages from department homepages
+            self.logger.info(f"Full crawl: Processing {len(self.rpage_urls)} departments")
+            for dept, lang_urls in self.rpage_urls.items():
+                for lang, url in lang_urls.items():
+                    yield scrapy.Request(
+                        url,
+                        callback=self.parse,
+                        meta={
+                            "department_name": dept,
+                            "language": lang,
+                            "original_url": url,
+                        },
+                        errback=self.handle_error,
+                    )
 
     def parse(self, response):
         """
@@ -224,12 +268,23 @@ class AnnouncementsSpider(scrapy.Spider):
                 # 更新動態載入的連結以包含語言查詢參數
                 updated_url = _update_url_lang_param(absolute_url, meta.get("language"))
                 if RPAGE_DOMAIN_SUFFIX in urlparse(updated_url).hostname:
+                    # Add URL to manager in full crawl mode
+                    if self.crawl_type == "full":
+                        self.url_manager.add_url(
+                            updated_url,
+                            metadata={
+                                "department": department,
+                                "language": language,
+                            }
+                        )
+                    
                     new_meta = meta.copy()
                     new_meta["announcement_url"] = updated_url
                     yield scrapy.Request(
                         updated_url,
                         callback=self.parse_announcement_list,
                         meta=new_meta,
+                        errback=self.handle_error,
                     )
 
     def parse_tab_content(self, response, meta):
@@ -259,6 +314,7 @@ class AnnouncementsSpider(scrapy.Spider):
                     updated_extracted_url,
                     callback=self.parse,
                     meta=new_meta,
+                    errback=self.handle_error,
                 )
 
     def parse_announcement_list(self, response):
@@ -268,15 +324,28 @@ class AnnouncementsSpider(scrapy.Spider):
         Args:
             response: Scrapy Response 物件。
         """
+        # Track this URL as discovered (for full crawls)
+        if self.crawl_type == "full":
+            self.discovered_urls.add(response.url)
+            
         announcement_item = AnnouncementItem()
         announcement_item["title"] = self.process_title(response)
         announcement_item["link"] = response.url
         announcement_item["language"] = response.meta.get("language")
         announcement_item["department"] = response.meta.get("department_name")
         announcement_item["articles"] = self.process_content(response)
+        
         if announcement_item["articles"] == []:
             self.logger.warning(f"❎ 在 {response.url} 找不到公告文章。")
+            # Mark as failed crawl
+            if response.meta.get("is_incremental"):
+                self.url_manager.mark_crawled(response.url, success=False)
             return
+            
+        # Mark as successful crawl
+        if response.meta.get("is_incremental") or self.crawl_type == "full":
+            self.url_manager.mark_crawled(response.url, success=True)
+            
         yield announcement_item
 
     def process_title(self, response):
@@ -397,6 +466,20 @@ class AnnouncementsSpider(scrapy.Spider):
 
         return title, link
 
+    def handle_error(self, failure):
+        """
+        處理請求錯誤。
+
+        Args:
+            failure: Twisted Failure 物件
+        """
+        request = failure.request
+        self.logger.error(f"Request failed: {request.url}, Error: {failure.value}")
+        
+        # Mark URL as failed if it's an incremental crawl
+        if request.meta.get("is_incremental"):
+            self.url_manager.mark_crawled(request.url, success=False)
+
 
 class JsonPipeline:
     """
@@ -432,6 +515,7 @@ class JsonPipeline:
     def close_spider(self, spider):
         """
         Spider 關閉時執行，合併所有公告資料到 JSON 總合檔案。
+        同時更新 URL 管理器。
         """
         # 使用 link 排序
         sorted_data = sorted(self.combined_data, key=lambda x: x["link"])
@@ -439,3 +523,15 @@ class JsonPipeline:
         with open(COMBINED_JSON_FILE, "w", encoding="utf-8") as f:
             json.dump(sorted_data, f, ensure_ascii=False, indent=4)  # 直接 dump 列表
         spider.logger.info(f'✅ 成功儲存所有公告資料至 "{COMBINED_JSON_FILE}"')
+        
+        # Update URL manager based on crawl type
+        if spider.crawl_type == "full":
+            spider.logger.info(f"Updating URL list from full crawl. Discovered {len(spider.discovered_urls)} URLs")
+            spider.url_manager.update_from_full_crawl(spider.discovered_urls)
+            # Cleanup old URLs periodically
+            spider.url_manager.cleanup_old_urls(days=90)
+        
+        # Save URL manager state
+        spider.url_manager.save()
+        stats = spider.url_manager.get_statistics()
+        spider.logger.info(f"URL Manager Final Stats: {stats}")

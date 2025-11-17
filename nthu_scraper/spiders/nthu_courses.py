@@ -162,6 +162,11 @@ class CoursesSpider(scrapy.Spider):
         "ROBOTSTXT_OBEY": False,
     }
 
+    def __init__(self, crawl_type="incremental", *args, **kwargs):
+        """Initialize spider. crawl_type is ignored for this spider."""
+        super().__init__(*args, **kwargs)
+        self.crawl_type = crawl_type
+
     def start_requests(self):
         # 逐筆建立 Request 並傳入 data_type 到 meta 中
         for data_type, url in COURSE_DATA_URL.items():

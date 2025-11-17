@@ -40,6 +40,11 @@ class MapSpider(scrapy.Spider):
         "ITEM_PIPELINES": {"nthu_scraper.spiders.nthu_maps.JsonMapPipeline": 1},
     }
 
+    def __init__(self, crawl_type="incremental", *args, **kwargs):
+        """Initialize spider. crawl_type is ignored for this spider."""
+        super().__init__(*args, **kwargs)
+        self.crawl_type = crawl_type
+
     def parse(self, response):
         """
         解析地圖資訊頁面，提取地圖座標資料。

@@ -34,6 +34,11 @@ class DiningSpider(scrapy.Spider):
         "ITEM_PIPELINES": {"nthu_scraper.spiders.nthu_dining.JsonDiningPipeline": 1},
     }
 
+    def __init__(self, crawl_type="incremental", *args, **kwargs):
+        """Initialize spider. crawl_type is ignored for this spider."""
+        super().__init__(*args, **kwargs)
+        self.crawl_type = crawl_type
+
     def parse(self, response):
         """
         解析餐廳資訊頁面，提取餐廳資料。

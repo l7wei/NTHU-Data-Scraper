@@ -170,6 +170,16 @@ class BusesSpider(scrapy.Spider):
         "ITEM_PIPELINES": {"nthu_scraper.spiders.nthu_buses.JsonBusPipeline": 1},
     }
 
+    def __init__(self, crawl_type="incremental", *args, **kwargs):
+        """
+        Initialize spider.
+        
+        Args:
+            crawl_type: Ignored for this spider, kept for consistency
+        """
+        super().__init__(*args, **kwargs)
+        self.crawl_type = crawl_type
+
     def start_requests(self):
         """
         覆寫 start_requests 方法，在爬取公車資訊頁面之前先處理公告 JSON 和時刻表圖片連結。
@@ -259,8 +269,19 @@ class BusesSpider(scrapy.Spider):
         Returns:
             Optional[Dict[str, Any]]: 解析後的資料，若解析失敗則回傳 None。
         """
-        regex_pattern = r"const " + re.escape(variable_string) + r" = (\{.*?\})"
-        data_match = re.search(regex_pattern, res_text, re.S)
+        # Try multiple patterns to handle different JavaScript variable declarations
+        patterns = [
+            r"(?:const|var|let)\s+" + re.escape(variable_string) + r"\s*=\s*(\{.*?\});?",
+            r"const " + re.escape(variable_string) + r" = (\{.*?\})",
+            r"var " + re.escape(variable_string) + r" = (\{.*?\})",
+        ]
+        
+        data_match = None
+        for pattern in patterns:
+            data_match = re.search(pattern, res_text, re.S)
+            if data_match:
+                break
+        
         if not data_match:
             self.logger.error(f"❎ 找不到變數 {variable_string} 的資料")
             return None
@@ -271,15 +292,29 @@ class BusesSpider(scrapy.Spider):
         data = data.replace('"', '\\"')
         data = data.replace("|", '"')
         data = data.replace("\n", "")
+        data = data.replace("\r", "")
+        data = data.replace("\t", "")
+        
+        # Replace unquoted keys with quoted keys (with colons)
+        data = data.replace("direction:", '"direction":')
+        data = data.replace("duration:", '"duration":')
+        data = data.replace("route:", '"route":', 1)  # Only first occurrence
+        data = data.replace("routeEN:", '"routeEN":')
+        
+        # Also handle legacy replacements (without colons)
         data = data.replace("direction", '"direction"')
         data = data.replace("duration", '"duration"')
         data = data.replace("route", '"route"', 1)  # 僅替換第一個出現的 route
         data = data.replace("routeEN", '"routeEN"')
+        
+        # Remove trailing commas
+        data = re.sub(r",\s*\}", "}", data)
 
         try:
             data_dict = json.loads(data)
         except json.JSONDecodeError as e:
             self.logger.error(f"❎ 解析 {variable_string} JSON 失敗: {e}")
+            self.logger.debug(f"Failed to parse data: {data[:200]}...")
             return None
 
         # 使用 Scrapy Selector 移除 route 與 routeEN 中的 <span> 標籤
@@ -306,25 +341,51 @@ class BusesSpider(scrapy.Spider):
         Returns:
             Optional[List[Dict[str, Any]]]: 解析後的陣列資料，若解析失敗則回傳 None。
         """
-        regex_pattern = r"const " + re.escape(variable_string) + r" = (\[.*?\])"
-        data_match = re.search(regex_pattern, res_text, re.S)
+        # Try multiple patterns to handle different JavaScript variable declarations
+        patterns = [
+            r"(?:const|var|let)\s+" + re.escape(variable_string) + r"\s*=\s*(\[.*?\]);?",
+            r"const " + re.escape(variable_string) + r" = (\[.*?\])",
+            r"var " + re.escape(variable_string) + r" = (\[.*?\])",
+        ]
+        
+        data_match = None
+        for pattern in patterns:
+            data_match = re.search(pattern, res_text, re.S)
+            if data_match:
+                break
+        
         if not data_match:
             self.logger.error(f"❎ 找不到變數 {variable_string} 的資料")
             return None
 
         data = data_match.group(1)
+        # More robust JSON-like data cleaning
         data = data.replace("'", '"')
         data = data.replace("\n", "")
+        data = data.replace("\r", "")
+        data = data.replace("\t", "")
+        
+        # Replace unquoted keys with quoted keys
+        data = data.replace("time:", '"time":')
+        data = data.replace("description:", '"description":')
+        data = data.replace("depStop:", '"dep_stop":')
+        data = data.replace("line:", '"line":')
+        
+        # Also handle legacy replacements
         data = data.replace("time", '"time"')
         data = data.replace("description", '"description"')
         data = data.replace("depStop", '"dep_stop"')
         data = data.replace("line", '"line"')
-        data = re.sub(r",[ ]+?\]", "]", data)  # 移除多餘的逗號
+        
+        # Remove trailing commas
+        data = re.sub(r",\s*\]", "]", data)
+        data = re.sub(r",\s*\}", "}", data)
 
         try:
             data_list = json.loads(data)
         except json.JSONDecodeError as e:
             self.logger.error(f"解析 {variable_string} JSON 失敗: {e}")
+            self.logger.debug(f"Failed to parse data: {data[:200]}...")
             return None
 
         # 移除 time 欄位為空的項目

@@ -53,6 +53,11 @@ class NewsletterSpider(scrapy.Spider):
 
     processed_urls: Set[str] = set()  # 用於追蹤已處理的 URL，避免重複請求
 
+    def __init__(self, crawl_type="incremental", *args, **kwargs):
+        """Initialize spider. crawl_type is ignored for this spider."""
+        super().__init__(*args, **kwargs)
+        self.crawl_type = crawl_type
+
     def parse(self, response: Response) -> scrapy.Request:
         """
         解析電子報列表頁面，提取各電子報的名稱、連結與表格資料。

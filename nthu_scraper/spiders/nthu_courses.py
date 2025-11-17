@@ -13,9 +13,9 @@ OUTPUT_FOLDER = DATA_FOLDER / "courses"
 LATEST_JSON = DATA_FOLDER / "courses.json"
 COURSE_DATA_URL: Dict[str, str] = {
     "latest": "https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/OPENDATA/open_course_data.json",
-    "11120-11220": "https://curricul.site.nthu.edu.tw/var/file/208/1208/img/474/11120-11220JSON.json",
-    "10910-11110": "https://curricul.site.nthu.edu.tw/var/file/208/1208/img/474/unicode_1091_1111.json",
-    "10820": "https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/OPENDATA/open_course_data_10820.json",
+    # "11120-11220": "https://curricul.site.nthu.edu.tw/var/file/208/1208/img/474/11120-11220JSON.json",
+    # "10910-11110": "https://curricul.site.nthu.edu.tw/var/file/208/1208/img/474/unicode_1091_1111.json",
+    # "10820": "https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/JH/OPENDATA/open_course_data_10820.json",
 }
 
 

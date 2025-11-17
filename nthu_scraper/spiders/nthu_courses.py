@@ -1,13 +1,14 @@
 import json
-import os
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Dict, List
 
 import scrapy
 
+from nthu_scraper.utils.constants import DATA_FOLDER
+from nthu_scraper.utils.file_utils import save_json
+
 # --- 全域參數設定 ---
-DATA_FOLDER = Path(os.getenv("DATA_FOLDER", "temp"))
 OUTPUT_FOLDER = DATA_FOLDER / "courses"
 LATEST_JSON = DATA_FOLDER / "courses.json"
 COURSE_DATA_URL: Dict[str, str] = {
@@ -197,8 +198,7 @@ class CoursesSpider(scrapy.Spider):
             self.logger.error(f"❎ 儲存原始資料錯誤: {e}")
 
         if data_type == "latest":
-            with LATEST_JSON.open("w", encoding="utf-8") as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
+            save_json(data, LATEST_JSON)
             self.logger.info(f"✅ 更新最新課程資料至: {LATEST_JSON}")
 
         # 呼叫分檔方法處理課程資料 (僅當資料為列表時)
@@ -235,9 +235,7 @@ class CoursesSpider(scrapy.Spider):
         output_folder.mkdir(parents=True, exist_ok=True)
         for semester, courses in semesters.items():
             semester_file = output_folder / f"{semester}.json"
-            try:
-                with semester_file.open("w", encoding="utf-8") as f:
-                    json.dump(courses, f, ensure_ascii=False, indent=2)
+            if save_json(courses, semester_file, ensure_dir=False):
                 self.logger.info(f"✅ 儲存學期 {semester} 資料至: {semester_file}")
-            except IOError as e:
-                self.logger.error(f"❎ 寫入 {semester} 檔案錯誤: {e}")
+            else:
+                self.logger.error(f"❌ 儲存學期 {semester} 資料失敗: {semester_file}")

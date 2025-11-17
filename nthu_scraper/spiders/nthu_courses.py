@@ -163,7 +163,7 @@ class CoursesSpider(scrapy.Spider):
         "ROBOTSTXT_OBEY": False,
     }
 
-    def start_requests(self):
+    async def start(self):
         # 逐筆建立 Request 並傳入 data_type 到 meta 中
         for data_type, url in COURSE_DATA_URL.items():
             yield scrapy.Request(url=url, meta={"data_type": data_type})

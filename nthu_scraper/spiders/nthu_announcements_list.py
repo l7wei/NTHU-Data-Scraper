@@ -42,7 +42,7 @@ class AnnouncementListItem(scrapy.Item):
 class AnnouncementsListSpider(scrapy.Spider):
     """
     公告列表爬蟲
-    
+
     負責遞迴爬取公告列表頁面，建立並更新 announcements_list.json
     """
 
@@ -85,7 +85,7 @@ class AnnouncementsListSpider(scrapy.Spider):
             return {item["link"] for item in existing_data}
         return set()
 
-    def start_requests(self):
+    async def start(self):
         """發送初始請求"""
         for dept, lang_urls in self.department_urls.items():
             for lang, url in lang_urls.items():
@@ -111,9 +111,7 @@ class AnnouncementsListSpider(scrapy.Spider):
             match = re.search(r'\$\.\s*hajaxOpenUrl\(\s*["\']([^"\']+)', tab_text)
             if match:
                 url = response.urljoin(match.group(1))
-                url = update_url_query_param(
-                    url, "Lang", response.meta.get("language")
-                )
+                url = update_url_query_param(url, "Lang", response.meta.get("language"))
                 yield scrapy.Request(
                     url,
                     callback=self.parse,

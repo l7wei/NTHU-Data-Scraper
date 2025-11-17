@@ -32,7 +32,7 @@ class AnnouncementArticle(scrapy.Item):
 class AnnouncementsItemSpider(scrapy.Spider):
     """
     公告內容爬蟲
-    
+
     從 announcements_list.json 讀取公告列表，爬取各公告頁面的文章內容
     """
 
@@ -55,7 +55,7 @@ class AnnouncementsItemSpider(scrapy.Spider):
             return []
         return data
 
-    def start_requests(self):
+    async def start(self):
         """發送初始請求"""
         if not self.announcement_list:
             self.logger.error("公告列表為空，無法爬取")
@@ -159,4 +159,6 @@ class AnnouncementItemPipeline:
         self.collected_data.sort(key=lambda x: x["link"])
 
         save_json(self.collected_data, ANNOUNCEMENTS_JSON_PATH)
-        spider.logger.info(f"成功儲存 {len(self.collected_data)} 個公告到 announcements.json")
+        spider.logger.info(
+            f"成功儲存 {len(self.collected_data)} 個公告到 announcements.json"
+        )

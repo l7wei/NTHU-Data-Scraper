@@ -67,7 +67,7 @@ class BusesSpider(scrapy.Spider):
         },
     }
 
-    def start_requests(self):
+    async def start(self):
         """初始化並發送請求"""
         self._load_schedule_image_links()
         for bus_type, config in BUS_CONFIG.items():

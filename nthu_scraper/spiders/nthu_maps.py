@@ -109,6 +109,7 @@ class JsonMapPipeline:
             item_dict = dict(item)
             map_type = item_dict["map_type"]
             map_data = item_dict["data"]
+            map_data = dict(sorted(map_data.items()))  # 對地點名稱排序
 
             self.all_map_data[map_type] = map_data  # 收集所有地圖資料
 

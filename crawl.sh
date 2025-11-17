@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Helper script to run Scrapy spiders locally or inside CI.
+# Helper script to run Scrapy spiders locally for development and testing.
+# Note: In CI/CD, the crawl logic is now directly embedded in GitHub Actions workflow.
 
 set -u
 
@@ -7,6 +8,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
 PYTHON_BIN="python"
+CRAWL_TYPE="incremental"
 
 declare -a REQUESTED_SPIDERS=()
 
@@ -30,10 +32,16 @@ Usage: crawl.sh [options] [SPIDER...]
 Options:
   --group <name>     Run a predefined group: ubuntu | self-hosted | all
   --python <bin>     Python interpreter to use when invoking Scrapy (default: python)
+  --crawl-type <t>   Crawl type: incremental | full (default: incremental)
   -h, --help         Show this help message and exit
 
 If no spiders or groups are provided, the script runs all spiders.
 Multiple groups and explicit spider names can be combined.
+
+Examples:
+  ./crawl.sh --group ubuntu --crawl-type full
+  ./crawl.sh nthu_announcements --crawl-type incremental
+  ./crawl.sh --group all
 EOF
 }
 
@@ -64,6 +72,10 @@ while (($#)); do
     --python)
       shift || { echo "Missing value for --python" >&2; exit 1; }
       PYTHON_BIN="$1"
+      ;;
+    --crawl-type)
+      shift || { echo "Missing value for --crawl-type" >&2; exit 1; }
+      CRAWL_TYPE="$1"
       ;;
     -h|--help)
       usage
@@ -98,11 +110,11 @@ SUCCESS_COUNT=0
 FAIL_COUNT=0
 declare -a FAILED_SPIDERS=()
 
-echo "Running ${#SPIDERS[@]} spider(s)"
+echo "Running ${#SPIDERS[@]} spider(s) with crawl type: ${CRAWL_TYPE}"
 
 for spider in "${SPIDERS[@]}"; do
   printf '\n=== Crawling %s ===\n' "$spider"
-  if "$PYTHON_BIN" -m scrapy crawl "$spider"; then
+  if "$PYTHON_BIN" -m scrapy crawl "$spider" -a crawl_type="${CRAWL_TYPE}"; then
     ((SUCCESS_COUNT++))
   else
     ((FAIL_COUNT++))

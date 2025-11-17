@@ -1,6 +1,7 @@
 """清華大學公車資訊爬蟲 - 重構版本"""
 
 import re
+import ast
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -140,6 +141,74 @@ class BusesSpider(scrapy.Spider):
                 meta={"bus_type": bus_type},
             )
 
+    def _extract_js_value(self, page_text: str, var_name: str) -> Optional[str]:
+        pattern = rf"const {re.escape(var_name)}\s*=\s*"
+        match = re.search(pattern, page_text)
+        if not match:
+            self.logger.warning(f"找不到變數: {var_name}")
+            return None
+
+        start = match.end()
+        length = len(page_text)
+        while start < length and page_text[start].isspace():
+            start += 1
+
+        if start >= length:
+            self.logger.warning(f"變數 {var_name} 沒有內容")
+            return None
+
+        opening = page_text[start]
+        closing_map = {"{": "}", "[": "]"}
+        closing = closing_map.get(opening)
+        if not closing:
+            self.logger.warning(f"變數 {var_name} 的起始符號不受支援: {opening}")
+            return None
+
+        depth = 0
+        in_string = False
+        string_char = ""
+        escape = False
+
+        for idx in range(start, length):
+            char = page_text[idx]
+            if in_string:
+                if escape:
+                    escape = False
+                elif char == "\\":
+                    escape = True
+                elif char == string_char:
+                    in_string = False
+                continue
+
+            if char in ('"', "'", "`"):
+                in_string = True
+                string_char = char
+            elif char == opening:
+                depth += 1
+            elif char == closing:
+                depth -= 1
+                if depth == 0:
+                    return page_text[start : idx + 1]
+
+        self.logger.error(f"找不到變數 {var_name} 的結束符號")
+        return None
+
+    def _prepare_literal(self, js_value: str) -> str:
+        literal = js_value.strip().rstrip(";")
+        literal = literal.replace("\r", " ").replace("\n", " ").replace("\t", " ")
+        literal = re.sub(
+            r'(?<!["\'])\b([A-Za-z_]\w*)\b\s*:',
+            r'"\1":',
+            literal,
+        )
+        literal = re.sub(r'""(\w+)"":', r'"\1":', literal)
+        literal = re.sub(r",\s*]", "]", literal)
+        literal = re.sub(r",\s*}", "}", literal)
+        literal = re.sub(r"\btrue\b", "True", literal, flags=re.IGNORECASE)
+        literal = re.sub(r"\bfalse\b", "False", literal, flags=re.IGNORECASE)
+        literal = re.sub(r"\bnull\b", "None", literal, flags=re.IGNORECASE)
+        return literal
+
     def _parse_info_variable(
         self, var_name: str, page_text: str
     ) -> Optional[Dict[str, Any]]:
@@ -153,32 +222,17 @@ class BusesSpider(scrapy.Spider):
         Returns:
             解析後的字典資料
         """
-        pattern = r"const " + re.escape(var_name) + r" = (\{[^}]*\})"
-        match = re.search(pattern, page_text, re.DOTALL)
-
-        if not match:
-            self.logger.warning(f"找不到變數: {var_name}")
+        js_obj = self._extract_js_value(page_text, var_name)
+        if not js_obj:
             return None
 
-        js_obj = match.group(1)
-
-        # 轉換為有效的 JSON
-        # 處理單引號轉雙引號
-        js_obj = js_obj.replace("'", '"')
-        # 處理換行符
-        js_obj = js_obj.replace("\n", " ")
-        # 處理屬性名稱（移除引號）
-        js_obj = re.sub(r'(\w+):', r'"\1":', js_obj)
-        # 處理已經有引號的情況（避免重複）
-        js_obj = re.sub(r'""(\w+)"":', r'"\1":', js_obj)
+        literal = self._prepare_literal(js_obj)
 
         try:
-            import json
-
-            data = json.loads(js_obj)
-        except json.JSONDecodeError as e:
+            data = ast.literal_eval(literal)
+        except (SyntaxError, ValueError) as e:
             self.logger.error(f"解析 {var_name} 失敗: {e}")
-            self.logger.debug(f"JSON 內容: {js_obj[:500]}")
+            self.logger.debug(f"JSON 內容: {literal[:500]}")
             return None
 
         # 清理 HTML 標籤
@@ -201,32 +255,17 @@ class BusesSpider(scrapy.Spider):
         Returns:
             解析後的列表資料
         """
-        pattern = r"const " + re.escape(var_name) + r" = (\[[^\]]*\])"
-        match = re.search(pattern, page_text, re.DOTALL)
-
-        if not match:
-            self.logger.warning(f"找不到變數: {var_name}")
+        js_array = self._extract_js_value(page_text, var_name)
+        if not js_array:
             return None
 
-        js_array = match.group(1)
-
-        # 轉換為有效的 JSON
-        js_array = js_array.replace("'", '"')
-        js_array = js_array.replace("\n", " ")
-        # 處理物件屬性名稱
-        js_array = re.sub(r'(\w+):', r'"\1":', js_array)
-        js_array = re.sub(r'""(\w+)"":', r'"\1":', js_array)
-        # 移除尾部多餘的逗號
-        js_array = re.sub(r",\s*]", "]", js_array)
-        js_array = re.sub(r",\s*}", "}", js_array)
+        literal = self._prepare_literal(js_array)
 
         try:
-            import json
-
-            data = json.loads(js_array)
-        except json.JSONDecodeError as e:
+            data = ast.literal_eval(literal)
+        except (SyntaxError, ValueError) as e:
             self.logger.error(f"解析 {var_name} 失敗: {e}")
-            self.logger.debug(f"JSON 內容: {js_array[:500]}")
+            self.logger.debug(f"JSON 內容: {literal[:500]}")
             return None
 
         # 標準化欄位名稱並過濾空時間

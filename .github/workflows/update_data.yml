@@ -40,7 +40,7 @@ jobs:
           DATA_FOLDER: ${{ env.DATA_FOLDER }}
         run: |
           # 先執行公告列表爬蟲
-          python -m scrapy crawl nthu_announcements_list
+          # python -m scrapy crawl nthu_announcements_list
           # 然後執行公告內容爬蟲
           python -m scrapy crawl nthu_announcements_item
           # 執行其他爬蟲

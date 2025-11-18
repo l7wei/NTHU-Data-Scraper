@@ -15,6 +15,7 @@ RPAGE_DOMAIN_SUFFIX = "site.nthu.edu.tw"
 
 # File paths
 DIRECTORY_PATH = DATA_FOLDER / "directory.json"
+ANNOUNCEMENTS_FOLDER = DATA_FOLDER / "announcements"
 ANNOUNCEMENTS_LIST_PATH = DATA_FOLDER / "announcements_list.json"
 ANNOUNCEMENTS_JSON_PATH = DATA_FOLDER / "announcements.json"
 BUSES_JSON_PATH = DATA_FOLDER / "buses.json"

@@ -1,10 +1,12 @@
 """清華大學公告爬蟲 - 公告內容爬蟲"""
 
 from typing import List, Optional
-
+from pathlib import Path
+import re
 import scrapy
 
 from nthu_scraper.utils.constants import (
+    ANNOUNCEMENTS_FOLDER,
     ANNOUNCEMENTS_JSON_PATH,
     ANNOUNCEMENTS_LIST_PATH,
 )
@@ -139,6 +141,7 @@ class AnnouncementItemPipeline:
     def open_spider(self, spider):
         """初始化"""
         self.collected_data = []
+        ANNOUNCEMENTS_FOLDER.mkdir(parents=True, exist_ok=True)
 
     def process_item(self, item, spider):
         """處理 Item"""
@@ -146,12 +149,30 @@ class AnnouncementItemPipeline:
             return item
 
         self.collected_data.append(dict(item))
+        self._save_individual_item(item)
         spider.logger.info(
             f'儲存公告: {item["department"]}/{item["title"]} '
             f'({len(item["articles"])} 篇文章)'
         )
 
         return item
+
+    def _save_individual_item(self, item: AnnouncementItem) -> None:
+        department = self._sanitize_path_component(
+            item.get("department") or "未命名單位"
+        )
+        title = self._sanitize_path_component(item.get("title") or "未命名公告")
+        language = self._sanitize_path_component(item.get("language") or "未知語言")
+
+        dept_dir = ANNOUNCEMENTS_FOLDER / department
+        dept_dir.mkdir(parents=True, exist_ok=True)
+
+        file_path = dept_dir / f"{title}_{language}.json"
+        save_json(dict(item), file_path)
+
+    def _sanitize_path_component(self, value: str) -> str:
+        sanitized = re.sub(r'[\\/:*?"<>|]', "_", value.strip())
+        return sanitized or "unnnamed"
 
     def close_spider(self, spider):
         """儲存資料"""

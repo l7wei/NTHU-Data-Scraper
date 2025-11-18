@@ -4,15 +4,30 @@ from typing import Dict, List, Optional
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 
-def update_url_query_param(url: str, param_name: str, param_value: str) -> str:
+# 新增：強制 https 的輔助方法
+def force_https(url: str) -> str:
+    """將 URL 的 scheme 強制為 https（簡單替換 http:// 與 // 開頭情況）"""
+    if not url:
+        return url
+    url = url.strip()
+    if url.startswith("//"):
+        return "https:" + url
+    if url.startswith("http://"):
+        return "https://" + url[len("http://") :]
+    return url
+
+
+def update_url_query_param(
+    url: str, param_name: str, param_value: str, force_https: bool = True
+) -> str:
     """
-    更新網址的查詢參數。
+    更新網址的查詢參數。可選地強制將 scheme 設為 https。
 
     Args:
         url: 網址字串。
         param_name: 參數名稱。
         param_value: 參數值。
-
+        force_https: 若為 True，會把 scheme 強制改為 https（若原本為 http 或空）。
     Returns:
         更新參數後的網址字串。
     """
@@ -20,7 +35,14 @@ def update_url_query_param(url: str, param_name: str, param_value: str) -> str:
     query_params = parse_qs(parsed_url.query)
     query_params[param_name] = [param_value]
     new_query = urlencode(query_params, doseq=True)
-    return urlunparse(parsed_url._replace(query=new_query))
+
+    # 若要求強制 https，將 scheme 改為 https；否則保留原本的 scheme（包括空 scheme -> 會保留 //host/... 形式）
+    if force_https:
+        parsed_url = parsed_url._replace(scheme="https", query=new_query)
+    else:
+        parsed_url = parsed_url._replace(query=new_query)
+
+    return urlunparse(parsed_url)
 
 
 def build_multi_lang_urls(

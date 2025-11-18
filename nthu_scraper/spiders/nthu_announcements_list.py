@@ -1,9 +1,10 @@
 """清華大學公告爬蟲 - 公告列表爬蟲"""
 
 import re
-from typing import Dict, List
+from typing import Dict
 
 import scrapy
+from scrapy_playwright.page import PageMethod
 
 from nthu_scraper.utils.constants import (
     ANNOUNCEMENTS_LIST_PATH,
@@ -16,6 +17,7 @@ from nthu_scraper.utils.url_utils import (
     build_multi_lang_urls,
     check_domain_suffix,
     update_url_query_param,
+    force_https,
 )
 
 # 其他公告來源
@@ -28,6 +30,22 @@ OTHER_SOURCES = {
         "zh-tw": "https://nthusa.site.nthu.edu.tw/?Lang=zh-tw",
     },
 }
+
+CUSTOM_ANNOUNCEMENT_SOURCES = [
+    # 可在此添加自訂的公告來源
+    {
+        "title": "校園公車暨巡迴公車公告",
+        "link": "https://affairs.site.nthu.edu.tw/p/403-1165-1065-1.php?Lang=zh-tw",
+        "language": "zh-tw",
+        "department": "總務處事務組",
+    },
+    {
+        "title": "校園公車暨巡迴公車公告",
+        "link": "https://affairs.site.nthu.edu.tw/p/403-1165-1065-1.php?Lang=en",
+        "language": "en",
+        "department": "總務處事務組",
+    },
+]
 
 
 class AnnouncementListItem(scrapy.Item):
@@ -51,22 +69,36 @@ class AnnouncementsListSpider(scrapy.Spider):
         "ITEM_PIPELINES": {
             "nthu_scraper.spiders.nthu_announcements_list.AnnouncementListPipeline": 1,
         },
+        # 啟用本模組內的 middleware，優先順序可調（數字越小越先執行）
+        "DOWNLOADER_MIDDLEWARES": {
+            "nthu_scraper.spiders.nthu_announcements_list.EnforceHTTPSMiddleware": 543,
+        },
+        "DOWNLOAD_HANDLERS": {
+            "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+            "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+        },
+        "TWISTED_REACTOR": "twisted.internet.asyncioreactor.AsyncioSelectorReactor",
+        "PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT": 15_000,
     }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.department_urls = self._load_department_urls()
         self.existing_links = self._load_existing_links()
+        self.requested_urls = set()
 
     def _load_department_urls(self) -> Dict[str, Dict[str, str]]:
         """從通訊錄載入單位 URL"""
         urls = {}
         directory = load_json(DIRECTORY_PATH)
-
+        # directory = None
         if directory:
             for dept in directory:
                 try:
-                    dept_name = dept["name"]
+                    if dept["parent_name"]:
+                        dept_name = dept["parent_name"] + dept["name"]
+                    else:
+                        dept_name = dept["name"]
                     website = dept["details"]["contact"]["website"]
                     lang_urls = build_multi_lang_urls(website, LANGUAGES)
                     if lang_urls and check_domain_suffix(website, RPAGE_DOMAIN_SUFFIX):
@@ -74,7 +106,7 @@ class AnnouncementsListSpider(scrapy.Spider):
                 except KeyError:
                     continue
 
-        # 添加其他來源
+        # 添加其他來源（OTHER_SOURCES 已改為 https）
         urls.update(OTHER_SOURCES)
         return urls
 
@@ -85,38 +117,71 @@ class AnnouncementsListSpider(scrapy.Spider):
             return {item["link"] for item in existing_data}
         return set()
 
+    def _build_playwright_meta(self, meta: Dict) -> Dict:
+        new_meta = meta.copy()
+        new_meta.update(
+            {
+                "playwright": True,
+                "playwright_page_methods": [
+                    PageMethod("wait_for_load_state", "networkidle")
+                ],
+            }
+        )
+        return new_meta
+
     async def start(self):
         """發送初始請求"""
         for dept, lang_urls in self.department_urls.items():
             for lang, url in lang_urls.items():
-                yield scrapy.Request(
-                    url,
-                    callback=self.parse,
-                    meta={"department": dept, "language": lang, "base_url": url},
-                )
+                meta = {"department": dept, "language": lang, "base_url": url}
+                request = self._build_request(url, self.parse, meta)
+                if request:
+                    yield request
+
+    def _build_request(self, url, callback, meta):
+        normalized_url = self._prepare_request_url(url)
+        if not normalized_url:
+            return None
+        return scrapy.Request(
+            normalized_url,
+            callback=callback,
+            meta=self._build_playwright_meta(meta.copy()),
+        )
+
+    def _prepare_request_url(self, url: str) -> str | None:
+        if not url:
+            return None
+        normalized = force_https(url)
+        if not normalized or not check_domain_suffix(normalized, RPAGE_DOMAIN_SUFFIX):
+            return None
+        if normalized in self.requested_urls:
+            return None
+        self.requested_urls.add(normalized)
+        return normalized
 
     def parse(self, response):
         """解析主頁面"""
         # 解析 tab content 中的動態載入連結
-        yield from self._parse_tab_content(response)
+        # yield from self._parse_tab_content(response)
 
         # 解析 "more" 連結
         yield from self._parse_more_links(response)
 
     def _parse_tab_content(self, response):
         """解析 tab content 中的公告連結"""
+        # 有點忘記為啥有他了
         tab_panes = response.css("div.tab-pane")
         for tab in tab_panes:
             tab_text = tab.xpath("string(.)").get()
-            match = re.search(r'\$\.\s*hajaxOpenUrl\(\s*["\']([^"\']+)', tab_text)
-            if match:
-                url = response.urljoin(match.group(1))
-                url = update_url_query_param(url, "Lang", response.meta.get("language"))
-                yield scrapy.Request(
-                    url,
-                    callback=self.parse,
-                    meta=response.meta,
-                )
+            tab_url_pattern = re.compile(r'\$\.\s*hajaxOpenUrl\(\s*["\']([^"\']+)')
+            match = tab_url_pattern.search(tab_text or "")
+            if not match:
+                continue
+            url = response.urljoin(match.group(1))
+            url = update_url_query_param(url, "Lang", response.meta.get("language"))
+            request = self._build_request(url, self.parse, response.meta.copy())
+            if request:
+                yield request
 
     def _parse_more_links(self, response):
         """解析 more 連結"""
@@ -126,19 +191,14 @@ class AnnouncementsListSpider(scrapy.Spider):
             abs_url = update_url_query_param(
                 abs_url, "Lang", response.meta.get("language")
             )
-
-            if not check_domain_suffix(abs_url, RPAGE_DOMAIN_SUFFIX):
-                continue
-
-            # 檢查是否為新連結
-            if abs_url not in self.existing_links:
-                self.logger.info(f"發現新公告列表: {abs_url}")
-
-            yield scrapy.Request(
-                abs_url,
-                callback=self.parse_announcement_list,
-                meta=response.meta.copy(),
+            request = self._build_request(
+                abs_url, self.parse_announcement_list, response.meta.copy()
             )
+            if request:
+                normalized_url = request.url
+                if normalized_url not in self.existing_links:
+                    self.logger.info(f"發現新公告列表: {normalized_url}")
+                yield request
 
     def parse_announcement_list(self, response):
         """解析公告列表頁面"""
@@ -193,6 +253,14 @@ class AnnouncementListPipeline:
         # 合併新舊資料
         all_items = self.existing_data + self.collected_items
 
+        # 新增自訂公告來源
+        for custom_item in CUSTOM_ANNOUNCEMENT_SOURCES:
+            if custom_item["link"] not in self.existing_links:
+                all_items.append(custom_item)
+                spider.logger.info(
+                    f"新增自訂公告列表: {custom_item['department']}/{custom_item['title']}"
+                )
+
         # 檢查並移除空連結（可選：驗證連結是否仍然有效）
         # 這裡先保留所有連結，實際驗證需要額外的請求
 
@@ -203,3 +271,18 @@ class AnnouncementListPipeline:
         spider.logger.info(
             f"儲存公告列表: 共 {len(all_items)} 筆 (新增 {len(self.collected_items)} 筆)"
         )
+
+
+# 新增：在模組內定義 middleware，確保所有 outgoing request 強制為 https
+class EnforceHTTPSMiddleware:
+    """
+    Downloader middleware：在 request 發出前強制把 URL 換成 https。
+    若 URL 已是 https 或無需修改，則不做變動。
+    """
+
+    def process_request(self, request, spider):
+        # 使用 utils.url_utils.force_https（spider 模組已匯入）或直接再 import
+        new_url = force_https(request.url)
+        if new_url and new_url != request.url:
+            # return 一個新的 Request 物件，以便 Scrapy 使用新的 URL
+            return request.replace(url=new_url)
